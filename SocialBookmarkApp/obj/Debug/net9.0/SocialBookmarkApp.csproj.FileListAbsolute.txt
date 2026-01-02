@@ -227,3 +227,6 @@
 /Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/obj/Debug/net9.0/SocialBookmarkApp.pdb
 /Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/obj/Debug/net9.0/SocialBookmarkApp.genruntimeconfig.cache
 /Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/obj/Debug/net9.0/ref/SocialBookmarkApp.dll
+/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/bin/Debug/net9.0/Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
+/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/bin/Debug/net9.0/MySqlConnector.dll
+/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll

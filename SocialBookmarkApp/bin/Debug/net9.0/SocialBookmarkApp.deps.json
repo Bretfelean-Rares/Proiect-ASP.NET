@@ -8,10 +8,12 @@
     ".NETCoreApp,Version=v9.0": {
       "SocialBookmarkApp/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "9.0.9",
           "Microsoft.EntityFrameworkCore": "9.0.9",
           "Microsoft.EntityFrameworkCore.Design": "9.0.9",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.9",
-          "Microsoft.EntityFrameworkCore.Tools": "9.0.9"
+          "Microsoft.EntityFrameworkCore.Tools": "9.0.9",
+          "Pomelo.EntityFrameworkCore.MySql": "9.0.0"
         },
         "runtime": {
           "SocialBookmarkApp.dll": {}
@@ -57,6 +59,17 @@
           "lib/net6.0/Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore/9.0.9": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "9.0.9"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll": {
+            "assemblyVersion": "9.0.9.0",
+            "fileVersion": "9.0.925.42003"
           }
         }
       },
@@ -739,6 +752,30 @@
           }
         }
       },
+      "MySqlConnector/2.4.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.9",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.9"
+        },
+        "runtime": {
+          "lib/net9.0/MySqlConnector.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.4.0.0"
+          }
+        }
+      },
+      "Pomelo.EntityFrameworkCore.MySql/9.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "9.0.9",
+          "MySqlConnector": "2.4.0"
+        },
+        "runtime": {
+          "lib/net8.0/Pomelo.EntityFrameworkCore.MySql.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.0.0"
+          }
+        }
+      },
       "System.ClientModel/1.0.0": {
         "dependencies": {
           "System.Memory.Data": "1.0.2",
@@ -1023,6 +1060,13 @@
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore/9.0.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ClnQ7NYH6glI4B8b91qiu0vN+5cuMrltpJJoJQmD9LPNMMTinkqmzEyFBce8r7Y68dEWiq14CBGYdr91++z+NQ==",
+      "path": "microsoft.aspnetcore.diagnostics.entityframeworkcore/9.0.9",
+      "hashPath": "microsoft.aspnetcore.diagnostics.entityframeworkcore.9.0.9.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
       "type": "package",
@@ -1317,6 +1361,20 @@
       "sha512": "sha512-YqueG52R/Xej4VVbKuRIodjiAhV0HR/XVbLbNrJhCZnzjnSjgMJ/dCdV0akQQxavX6hp/LC6rqLGLcXeQYU7XA==",
       "path": "mono.texttemplating/3.0.0",
       "hashPath": "mono.texttemplating.3.0.0.nupkg.sha512"
+    },
+    "MySqlConnector/2.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-78M+gVOjbdZEDIyXQqcA7EYlCGS3tpbUELHvn6638A2w0pkPI625ixnzsa5staAd3N9/xFmPJtkKDYwsXpFi/w==",
+      "path": "mysqlconnector/2.4.0",
+      "hashPath": "mysqlconnector.2.4.0.nupkg.sha512"
+    },
+    "Pomelo.EntityFrameworkCore.MySql/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cl7S4s6CbJno0LjNxrBHNc2xxmCliR5i40ATPZk/eTywVaAbHCbdc9vbGc3QThvwGjHqrDHT8vY9m1VF/47o0g==",
+      "path": "pomelo.entityframeworkcore.mysql/9.0.0",
+      "hashPath": "pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",
