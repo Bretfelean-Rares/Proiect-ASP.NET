@@ -1,0 +1,89 @@
+@model SocialBookmarkApp.Models.Bookmark
+
+<br />
+
+<h2 class="text-center">@Model.Title</h2>
+
+<br />
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert @ViewBag.Alert text-center">
+        @ViewBag.Message
+    </div>
+}
+
+<div class="card p-3 mb-3">
+    <p><b>Descriere:</b> @Model.Description</p>
+
+    @if (!string.IsNullOrEmpty(Model.MediaContent))
+    {
+        <p><b>Media:</b></p>
+        <div>@Html.Raw(Model.MediaContent)</div>
+    }
+
+    <p>
+        <b>Autor:</b> @Model.User?.UserName <br />
+        <b>Creat:</b> @Model.CreatedAt.ToLocalTime()
+    </p>
+
+    <p>
+        <b>Vizibilitate:</b>
+        @(Model.IsPublic ? "Public" : "Privat")
+    </p>
+</div>
+
+@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
+{
+    <div class="mb-3">
+        <b>Categorii:</b>
+        <ul>
+            @foreach (var bc in Model.BookmarkCategories)
+            {
+                <li>@bc.Category?.CategoryName</li>
+            }
+        </ul>
+    </div>
+}
+
+<hr />
+
+<h4>Comentarii</h4>
+
+@if (Model.Comments != null && Model.Comments.Any())
+{
+    @foreach (var comm in Model.Comments)
+    {
+        <div class="border p-2 mb-2">
+            <p>@comm.Content</p>
+            <small>
+                @comm.User?.UserName –
+                @comm.CreatedAt.ToLocalTime()
+            </small>
+        </div>
+    }
+}
+else
+{
+    <p>Nu exista comentarii.</p>
+}
+
+<hr />
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <form method="post" asp-action="AddComment">
+        <input type="hidden" name="BookmarkId" value="@Model.Id" />
+
+        <div class="mb-3">
+            <textarea name="Content" class="form-control" rows="3"
+                      placeholder="Scrie un comentariu..."></textarea>
+        </div>
+
+        <button class="btn btn-primary">Adauga comentariu</button>
+    </form>
+}
+
+<br />
+
+<a class="btn btn-secondary" asp-action="Index">Inapoi</a>

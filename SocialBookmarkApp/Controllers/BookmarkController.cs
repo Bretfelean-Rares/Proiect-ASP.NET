@@ -13,7 +13,6 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     private readonly AppDbContext db = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-
     // GET
     [AllowAnonymous]
     public IActionResult Index()
@@ -34,6 +33,34 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         return View();
     }
     
+    [Authorize]
+    public IActionResult Show(int id)
+    {
+        Bookmark? bookmark = db.Bookmarks
+            .Include(b => b.User)
+            .Include(b => b.Comments)
+            .ThenInclude(c => c.User)
+            .Include(b => b.BookmarkCategories)
+            .ThenInclude(bc => bc.Category)
+            .FirstOrDefault(b => b.Id == id);
+
+        if (bookmark == null)
+        {
+            return NotFound();
+        }
+
+        ViewBag.UserCurent = _userManager.GetUserId(User);
+        ViewBag.EsteAdmin = User.IsInRole("Admin");
+
+        if (TempData.ContainsKey("message"))
+        {
+            ViewBag.Message = TempData["message"];
+            ViewBag.Alert = TempData["messageType"];
+        }
+
+        return View(bookmark);
+    }
+    
     //Get
     [AllowAnonymous]
     public IActionResult New()
@@ -48,10 +75,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     public IActionResult New(Bookmark bookmark)
     {
         bookmark.CreatedAt = DateTime.Now;
-        bookmark.UserId= _userManager.GetUserId(User);
-        
-        TempData["message"] = "Bookmark-ul a fost adaugat";
-        TempData["messageType"] = "alert-success";
+        bookmark.UserId = _userManager.GetUserId(User);;
         
         if (ModelState.IsValid)
         {
@@ -63,9 +87,17 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
             return RedirectToAction("Index");
         }
-        return View(bookmark);    
+        else
+        {
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            TempData["message"] = "Formular invalid: " + string.Join(" | ", errors);
+            TempData["messageType"] = "alert-danger";
+            return View(bookmark);
+        }
     }
-    
-    
-    
+   
 }

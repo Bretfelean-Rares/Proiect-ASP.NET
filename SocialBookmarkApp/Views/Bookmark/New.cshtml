@@ -1,5 +1,12 @@
 @model SocialBookmarkApp.Models.Bookmark
 
+@if (TempData["message"] != null)
+{
+    <div class="alert @TempData["messageType"] text-center">
+        @TempData["message"]
+    </div>
+}
+
 <br />
 <h2 class="text-center">Adaugare bookmark</h2>
 

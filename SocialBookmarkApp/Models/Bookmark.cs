@@ -22,8 +22,7 @@ public class Bookmark
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
-    [Required]
-    public string? UserId { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
     public virtual ApplicationUser? User { get; set; }
     
     
