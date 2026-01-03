@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SocialBookmarkApp.Models;
 
 namespace SocialBookmarkApp.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser>
+
 {
     public AppDbContext(DbContextOptions<AppDbContext>
         options)
