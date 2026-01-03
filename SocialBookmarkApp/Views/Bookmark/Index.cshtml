@@ -1,0 +1,32 @@
+<br />
+<h2 class="text-center">Afisare bookmark-uri</h2>
+
+<br />
+
+@if (ViewBag.Message != null)
+{
+    <h2 class="p-3 rounded-3 text-center mb-5 alert @ViewBag.Alert">
+        @ViewBag.Message
+    </h2>
+}
+
+<br />
+
+@foreach (var bookmark in ViewBag.Bookmarks)
+{
+    <div class="card">
+
+        <partial name="BookmarkInfo" model="bookmark"></partial>
+
+        <a class="btn btn-success"
+           asp-controller="Bookmarks"
+           asp-action="Show"
+           asp-route-id="@bookmark.Id">
+            Afisare bookmark
+        </a>
+
+    </div>
+
+    <br />
+    <br />
+}
