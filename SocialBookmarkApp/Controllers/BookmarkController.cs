@@ -36,6 +36,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     [Authorize]
     public IActionResult Show(int id)
     {
+        ViewBag.UserCurent = _userManager.GetUserId(User);
         Bookmark? bookmark = db.Bookmarks
             .Include(b => b.User)
             .Include(b => b.Comments)
@@ -99,5 +100,79 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             return View(bookmark);
         }
     }
-   
+    
+    [Authorize]
+    public IActionResult Edit(int id)
+    {
+        var bookmark = db.Bookmarks.Find(id);
+        if (bookmark == null) return NotFound();
+
+        var userId = _userManager.GetUserId(User);
+        if (bookmark.UserId != userId)
+        {
+            TempData["message"] = "Nu aveti dreptul sa editati acest bookmark.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        return View(bookmark);
+    }
+    
+    [HttpPost]
+    [Authorize]
+    public IActionResult Edit(int id, Bookmark requestBookmark)
+    {
+        var bookmark = db.Bookmarks.Find(id);
+        if (bookmark == null) return NotFound();
+
+        var userId = _userManager.GetUserId(User);
+        if (bookmark.UserId != userId)
+        {
+            TempData["message"] = "Nu aveti dreptul sa editati acest bookmark.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        if (ModelState.IsValid)
+        {
+            bookmark.Title = requestBookmark.Title;
+            bookmark.Description = requestBookmark.Description;
+            bookmark.MediaContent = requestBookmark.MediaContent;
+            bookmark.IsPublic = requestBookmark.IsPublic;
+
+            db.SaveChanges();
+
+            TempData["message"] = "Bookmark-ul a fost modificat.";
+            TempData["messageType"] = "alert-success";
+            return RedirectToAction("Show", new { id = bookmark.Id });
+        }
+
+        return View(requestBookmark);
+    }
+    
+    [HttpPost]
+    [Authorize]
+    public IActionResult Delete(int id)
+    {
+        var bookmark = db.Bookmarks.Find(id);
+        if (bookmark == null)
+        {
+            return NotFound();
+        }
+
+        var userId = _userManager.GetUserId(User);
+        if (bookmark.UserId != userId)
+        {
+            TempData["message"] = "Nu aveti dreptul sa stergeti acest bookmark.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        db.Bookmarks.Remove(bookmark);
+        db.SaveChanges();
+
+        TempData["message"] = "Bookmark-ul a fost sters.";
+        TempData["messageType"] = "alert-success";
+        return RedirectToAction("Index");
+    }
 }
