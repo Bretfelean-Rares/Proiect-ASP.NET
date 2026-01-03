@@ -25,9 +25,7 @@ public class Bookmark
     [Required]
     public string? AuthorId { get; set; } = string.Empty;
     public virtual ApplicationUser? User { get; set; }
-
-    [ForeignKey(nameof(AuthorId))]
-    public ApplicationUser? Author { get; set; }
+    
     
     public virtual ICollection<Comment>? Comments { get; set; }
     public virtual ICollection<BookmarkCategory>? BookmarkCategories { get; set; }
