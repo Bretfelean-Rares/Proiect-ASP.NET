@@ -1,0 +1,14 @@
+@model SocialBookmarkApp.Models.Bookmark
+
+<div class="card-body">
+    <h4 class="card-title">@Model.Title</h4>
+
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <p class="card-text">@Model.Description</p>
+    }
+
+    <small class="text-muted">
+        @Model.CreatedAt.ToString("dd.MM.yyyy")
+    </small>
+</div>

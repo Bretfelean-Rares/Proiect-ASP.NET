@@ -1,0 +1,31 @@
+@model SocialBookmarkApp.Models.Bookmark
+
+<br />
+<h2 class="text-center">Adaugare bookmark</h2>
+
+<form method="post">
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MediaContent" class="form-label"></label>
+        <input asp-for="MediaContent" class="form-control" />
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsPublic" class="form-check-input" />
+        <label asp-for="IsPublic" class="form-check-label"></label>
+    </div>
+
+    <button class="btn btn-success" type="submit">Adauga</button>
+</form>

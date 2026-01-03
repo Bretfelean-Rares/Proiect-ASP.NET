@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SocialBookmarkApp.Models;
 
 public class BookmarkCategory
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     public int? BookmarkId { get; set; }
     public int? CategoryId { get; set; }
 

@@ -15,8 +15,6 @@ public class Category
     [Required]
     public string UserId { get; set; } = string.Empty;
     public virtual ApplicationUser? User { get; set; }
-
-    public virtual ICollection<Bookmark> Bookmarks { get; set; } = [];
     
     public virtual ICollection<BookmarkCategory>? BookmarkCategories { get; set; }
 

@@ -24,7 +24,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<BookmarkCategory>()
-            .HasKey(bc => new { bc.BookmarkId, bc.CategoryId });
+            .HasKey(bc => new { bc.Id, bc.BookmarkId, bc.CategoryId });
 
         modelBuilder.Entity<BookmarkCategory>()
             .HasOne(bc => bc.Bookmark)

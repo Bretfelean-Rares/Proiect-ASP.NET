@@ -11,6 +11,8 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 {
     
     private readonly AppDbContext db = context;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+
 
     // GET
     [AllowAnonymous]
@@ -31,6 +33,39 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
         return View();
     }
+    
+    //Get
+    [AllowAnonymous]
+    public IActionResult New()
+    {
+        Bookmark bookmark = new Bookmark();
+
+        return View(bookmark);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public IActionResult New(Bookmark bookmark)
+    {
+        bookmark.CreatedAt = DateTime.Now;
+        bookmark.UserId= _userManager.GetUserId(User);
+        
+        TempData["message"] = "Bookmark-ul a fost adaugat";
+        TempData["messageType"] = "alert-success";
+        
+        if (ModelState.IsValid)
+        {
+            db.Bookmarks.Add(bookmark);
+            db.SaveChanges();
+
+            TempData["message"] = "Bookmark-ul a fost adaugat";
+            TempData["messageType"] = "alert-success";
+
+            return RedirectToAction("Index");
+        }
+        return View(bookmark);    
+    }
+    
     
     
 }
