@@ -60,8 +60,33 @@
                 @comm.User?.UserName –
                 @comm.CreatedAt.ToLocalTime()
             </small>
+
+            @if (comm.UserId == ViewBag.UserCurent)
+            {
+                <div class="mt-2">
+                    <a class="btn btn-sm btn-warning"
+                       asp-controller="Comment"
+                       asp-action="Edit"
+                       asp-route-id="@comm.Id">
+                        Editeaza
+                    </a>
+
+                    <form asp-controller="Comment"
+                          asp-action="Delete"
+                          asp-route-id="@comm.Id"
+                          method="post"
+                          style="display:inline">
+
+                        <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Sigur vrei sa stergi comentariul?');">
+                            Sterge
+                        </button>
+                    </form>
+                </div>
+            }
         </div>
     }
+    
 }
 else
 {
@@ -72,15 +97,12 @@ else
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    <form method="post" asp-action="AddComment">
+    <form asp-action="New" asp-controller="Comment" method="post">
         <input type="hidden" name="BookmarkId" value="@Model.Id" />
 
-        <div class="mb-3">
-            <textarea name="Content" class="form-control" rows="3"
-                      placeholder="Scrie un comentariu..."></textarea>
-        </div>
+        <textarea name="Content" class="form-control"></textarea>
 
-        <button class="btn btn-primary">Adauga comentariu</button>
+        <button class="btn btn-primary mt-2">Adauga comentariu</button>
     </form>
 }
 @if (Model.UserId == ViewBag.UserCurent)
