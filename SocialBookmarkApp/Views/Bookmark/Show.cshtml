@@ -29,7 +29,14 @@
     }
 
     <div>
-        <div><i class="bi bi-person"></i> @Model.User.UserName</div>
+        <div>
+            <i class="bi bi-person"></i>
+            <a asp-controller="Profile"
+               asp-action="Show"
+               asp-route-id="@Model.UserId">
+                @Model.User?.UserName
+            </a>
+        </div>
         <div><i class="bi bi-clock-fill"></i> @Model.CreatedAt.ToLocalTime() </div>
     </div>
 

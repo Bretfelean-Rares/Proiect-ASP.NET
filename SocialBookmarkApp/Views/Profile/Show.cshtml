@@ -1,0 +1,56 @@
+@model SocialBookmarkApp.Models.ApplicationUser
+
+<h2>@Model.UserName</h2>
+
+@if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+{
+    <img src="@Model.ProfileImageUrl"
+         class="img-thumbnail mb-3"
+         style="max-width:200px;" />
+}
+
+@if (!string.IsNullOrEmpty(Model.About))
+{
+    <p><b>About:</b> @Model.About</p>
+}
+
+<hr />
+
+<h4>Bookmark-uri publice</h4>
+
+@if (Model.Bookmarks != null && Model.Bookmarks.Any())
+{
+    @foreach (var b in Model.Bookmarks)
+    {
+        <div class="card mb-2 p-2">
+            <h5>@b.Title</h5>
+            <p>@b.Description</p>
+            @if (!string.IsNullOrEmpty(b.MediaContent))
+            {
+                if (b.MediaContent.StartsWith("http"))
+                {
+                    <img src="@b.MediaContent"
+                         class="img-fluid rounded mb-2"
+                         alt="Bookmark media" />
+                }
+                else
+                {
+                    <div class="ratio ratio-16x9 mb-2">
+                        @Html.Raw(b.MediaContent)
+                    </div>
+                }
+            }
+
+            <a class="btn btn-sm btn-primary"
+               asp-controller="Bookmark"
+               asp-action="Show"
+               asp-route-id="@b.Id">
+                Vezi
+            </a>
+        </div>
+    }
+}
+else
+{
+    <p>Acest utilizator nu are bookmark-uri publice.</p>
+}
