@@ -16,15 +16,43 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     
     // GET
     [AllowAnonymous]
-    public IActionResult Index()
+    public IActionResult Index(string sort, int page)
     {
+        int pageSize = 5;
+        if(page < 1) 
+            page = 1;
+        if (sort == null)
+            sort = "recent";
+        
+        ViewBag.Sort = sort;
+        ViewBag.Page = page;
+        
         var bookmarks = db.Bookmarks
             .Include(b => b.User)
             .Include(b => b.Votes)   
-            .OrderByDescending(b => b.CreatedAt)
             .Where(b => b.IsPublic);
 
-        ViewBag.Bookmarks = bookmarks;
+        if (sort == "recent")
+        {
+            bookmarks = bookmarks.OrderByDescending(b => b.CreatedAt);
+        }
+        else if (sort == "popular")
+        {
+            bookmarks = bookmarks.OrderByDescending(b => b.Votes.Count)
+                .ThenByDescending(b => b.CreatedAt);;
+        }
+        int totalItems = bookmarks.Count();
+        int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+        if (totalPages == 0)
+            totalPages = 1;
+        
+        var bookmarksPage = bookmarks
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.Bookmarks = bookmarksPage;
+        ViewBag.TotalPages = totalPages;
 
         if (TempData.ContainsKey("message"))
         {

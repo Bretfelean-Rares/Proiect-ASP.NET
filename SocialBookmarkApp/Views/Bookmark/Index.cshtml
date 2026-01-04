@@ -1,6 +1,18 @@
 <br />
 <h2 class="text-center">Afisare bookmark-uri</h2>
 
+<div class="mb-3">
+    <a class="btn @(ViewBag.Sort == "recent" ? "btn-primary" : "btn-outline-primary")"
+       asp-action="Index" asp-route-sort="recent" asp-route-page="1">
+        Recent
+    </a>
+
+    <a class="btn @(ViewBag.Sort == "popular" ? "btn-primary" : "btn-outline-primary")"
+       asp-action="Index" asp-route-sort="popular" asp-route-page="1">
+        Populare
+    </a>
+</div>
+
 <br />
 
 @if (ViewBag.Message != null)
@@ -35,3 +47,28 @@
     <br />
     <br />
 }
+
+@{
+    int page = ViewBag.Page;
+    int totalPages = ViewBag.TotalPages;
+    string sort = ViewBag.Sort;
+}
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(page == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-sort="@sort" asp-route-page="@(page - 1)">Prev</a>
+        </li>
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == page ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-sort="@sort" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(page == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-sort="@sort" asp-route-page="@(page + 1)">Next</a>
+        </li>
+    </ul>
+</nav>
