@@ -22,15 +22,14 @@
         <div>@Html.Raw(Model.MediaContent)</div>
     }
 
-    <p>
-        <b>Autor:</b> @Model.User?.UserName <br />
-        <b>Creat:</b> @Model.CreatedAt.ToLocalTime()
-    </p>
+    <div>
+        <div><i class="bi bi-person"></i> @Model.User.UserName</div>
+        <div><i class="bi bi-clock-fill"></i> @Model.CreatedAt.ToLocalTime() </div>
+    </div>
 
-    <p>
-        <b>Vizibilitate:</b>
-        @(Model.IsPublic ? "Public" : "Privat")
-    </p>
+    <div>
+        <div><i class="bi bi-globe"></i> @(Model.IsPublic ? "Public" : "Privat")  </div>
+    </div>
 </div>
 
 @if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
@@ -105,14 +104,14 @@ else
         <button class="btn btn-primary mt-2">Adauga comentariu</button>
     </form>
 }
-@if (Model.UserId == ViewBag.UserCurent)
+@if (Model.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin)
 {
     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Editeaza</a>
 }
 
 <br />
 
-@if (Model.UserId == ViewBag.UserCurent)
+@if (Model.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin)
 {
     <form asp-action="Delete"
           asp-controller="Bookmark"

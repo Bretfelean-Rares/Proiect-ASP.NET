@@ -7,12 +7,13 @@ using SocialBookmarkApp.Models;
 
 namespace SocialBookmarkApp.Controllers;
 
-public class BookmarkController(AppDbContext context, UserManager<ApplicationUser> userManager) : Controller
+public class BookmarkController(AppDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : Controller
 {
     
     private readonly AppDbContext db = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-
+    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    
     // GET
     [AllowAnonymous]
     public IActionResult Index()
@@ -33,7 +34,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         return View();
     }
     
-    [Authorize]
+    [AllowAnonymous]
     public IActionResult Show(int id)
     {
         ViewBag.UserCurent = _userManager.GetUserId(User);
@@ -63,7 +64,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     }
     
     //Get
-    [AllowAnonymous]
+    [Authorize(Roles="Admin, User")]
     public IActionResult New()
     {
         Bookmark bookmark = new Bookmark();
@@ -72,7 +73,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles="Admin, User")]
     public IActionResult New(Bookmark bookmark)
     {
         bookmark.CreatedAt = DateTime.Now;
@@ -101,14 +102,14 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         }
     }
     
-    [Authorize]
+    [Authorize(Roles="Admin, User")]
     public IActionResult Edit(int id)
     {
         var bookmark = db.Bookmarks.Find(id);
         if (bookmark == null) return NotFound();
 
         var userId = _userManager.GetUserId(User);
-        if (bookmark.UserId != userId)
+        if (bookmark.UserId != userId && !User.IsInRole("Admin"))
         {
             TempData["message"] = "Nu aveti dreptul sa editati acest bookmark.";
             TempData["messageType"] = "alert-danger";
@@ -119,14 +120,14 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     }
     
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles="Admin, User")]
     public IActionResult Edit(int id, Bookmark requestBookmark)
     {
         var bookmark = db.Bookmarks.Find(id);
         if (bookmark == null) return NotFound();
 
         var userId = _userManager.GetUserId(User);
-        if (bookmark.UserId != userId)
+        if (bookmark.UserId != userId && !User.IsInRole("Admin"))
         {
             TempData["message"] = "Nu aveti dreptul sa editati acest bookmark.";
             TempData["messageType"] = "alert-danger";
@@ -151,7 +152,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     }
     
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles="Admin, User")]
     public IActionResult Delete(int id)
     {
         var bookmark = db.Bookmarks.Find(id);
@@ -161,7 +162,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         }
 
         var userId = _userManager.GetUserId(User);
-        if (bookmark.UserId != userId)
+        if (bookmark.UserId != userId && !User.IsInRole("Admin"))
         {
             TempData["message"] = "Nu aveti dreptul sa stergeti acest bookmark.";
             TempData["messageType"] = "alert-danger";
@@ -175,4 +176,6 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         TempData["messageType"] = "alert-success";
         return RedirectToAction("Index");
     }
+
+
 }
