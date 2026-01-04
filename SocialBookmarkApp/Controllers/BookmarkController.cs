@@ -26,11 +26,13 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         
         ViewBag.Sort = sort;
         ViewBag.Page = page;
+        var userId = _userManager.GetUserId(User);
         
         var bookmarks = db.Bookmarks
             .Include(b => b.User)
             .Include(b => b.Votes)   
-            .Where(b => b.IsPublic);
+            .Where(b => b.IsPublic == true ||
+                        (userId != null && b.UserId == userId));
 
         if (sort == "recent")
         {

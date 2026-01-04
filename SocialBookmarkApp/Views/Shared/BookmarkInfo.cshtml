@@ -7,6 +7,17 @@
     {
         <p class="card-text">@Model.Description</p>
     }
+    @if (!string.IsNullOrEmpty(Model.MediaContent))
+    {
+        if (Model.MediaContent.StartsWith("http"))
+        {
+            <img src="@Model.MediaContent" class="img-fluid rounded" />
+        }
+        else
+        {
+            @Html.Raw(Model.MediaContent)
+        }
+    }
 
     <small class="text-muted">
         @Model.CreatedAt.ToString("dd.MM.yyyy")

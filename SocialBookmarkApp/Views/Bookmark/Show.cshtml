@@ -18,8 +18,14 @@
 
     @if (!string.IsNullOrEmpty(Model.MediaContent))
     {
-        <p><b>Media:</b></p>
-        <div>@Html.Raw(Model.MediaContent)</div>
+        if (Model.MediaContent.StartsWith("http"))
+        {
+            <img src="@Model.MediaContent" class="img-fluid rounded" />
+        }
+        else
+        {
+            @Html.Raw(Model.MediaContent)
+        }
     }
 
     <div>
