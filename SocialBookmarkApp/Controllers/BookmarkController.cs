@@ -20,6 +20,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     {
         var bookmarks = db.Bookmarks
             .Include(b => b.User)
+            .Include(b => b.Votes)   
             .OrderByDescending(b => b.CreatedAt)
             .Where(b => b.IsPublic);
 
@@ -40,12 +41,15 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         ViewBag.UserCurent = _userManager.GetUserId(User);
         Bookmark? bookmark = db.Bookmarks
             .Include(b => b.User)
+            .Include(b => b.Votes)
             .Include(b => b.Comments)
             .ThenInclude(c => c.User)
             .Include(b => b.BookmarkCategories)
             .ThenInclude(bc => bc.Category)
             .FirstOrDefault(b => b.Id == id);
 
+        ViewBag.UserHasLiked = bookmark.Votes
+            .Any(v => v.UserId == _userManager.GetUserId(User));
         if (bookmark == null)
         {
             return NotFound();

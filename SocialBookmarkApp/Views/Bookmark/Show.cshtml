@@ -30,6 +30,19 @@
     <div>
         <div><i class="bi bi-globe"></i> @(Model.IsPublic ? "Public" : "Privat")  </div>
     </div>
+    
+    <div class="mb-3">
+        <i class="bi bi-heart-fill text-danger"></i>
+        <strong>@Model.VotesCount</strong> voturi
+    </div>
+    <form asp-controller="Vote" asp-action="Toggle" method="post">
+        <input type="hidden" name="bookmarkId" value="@Model.Id" />
+
+        <button class="btn @(ViewBag.UserHasLiked ? "btn-danger" : "btn-outline-danger")">
+            <i class="bi @(ViewBag.UserHasLiked ? "bi-heart-fill" : "bi-heart")"></i>
+            @Model.VotesCount
+        </button>
+    </form>
 </div>
 
 @if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())

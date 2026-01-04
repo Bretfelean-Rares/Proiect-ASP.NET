@@ -28,6 +28,12 @@ public class Bookmark
     
     public virtual ICollection<Comment>? Comments { get; set; }
     public virtual ICollection<BookmarkCategory>? BookmarkCategories { get; set; }
+    
+
+    public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
+
+    [NotMapped]
+    public int VotesCount => Votes.Count;
 
 
 }

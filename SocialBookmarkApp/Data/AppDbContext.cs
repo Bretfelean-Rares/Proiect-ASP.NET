@@ -41,6 +41,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(b=>b.Comments)
             .HasForeignKey(c => c.BookmarkId);
         
+        modelBuilder.Entity<Vote>()
+            .HasIndex(v => new { v.BookmarkId, v.UserId })
+            .IsUnique();
        
     }
 
