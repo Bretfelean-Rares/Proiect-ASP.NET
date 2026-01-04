@@ -1,0 +1,40 @@
+@model SocialBookmarkApp.Models.ApplicationUser
+
+<h2>Edit profile</h2>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert @TempData["messageType"]">@TempData["message"]</div>
+}
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">First name</label>
+        <input class="form-control" name="firstName" value="@Model.FirstName" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Last name</label>
+        <input class="form-control" name="lastName" value="@Model.LastName" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">About</label>
+        <textarea class="form-control" name="about" rows="4">@Model.About</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Profile image URL</label>
+        <input class="form-control" name="profileImageUrl" value="@Model.ProfileImageUrl" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+    {
+        <img src="@Model.ProfileImageUrl" class="img-thumbnail mb-3" style="max-width:200px;" />
+    }
+
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" asp-action="MyProfile">Cancel</a>
+</form>

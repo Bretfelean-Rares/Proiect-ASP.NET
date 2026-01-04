@@ -1,18 +1,46 @@
 @model SocialBookmarkApp.Models.ApplicationUser
 
-<h2>@Model.UserName</h2>
+<div class="row align-items-start mb-4">
+    <div class="col-md-3">
+        @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+        {
+            <img src="@Model.ProfileImageUrl"
+                 class="img-fluid rounded border"
+                 style="max-width: 220px;"
+                 alt="Profile picture" />
+        }
+        else
+        {
+            <div class="border rounded p-4 text-center text-muted">
+                Fără poză
+            </div>
+        }
+    </div>
 
-@if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
-{
-    <img src="@Model.ProfileImageUrl"
-         class="img-thumbnail mb-3"
-         style="max-width:200px;" />
-}
+    <div class="col-md-9">
+        <h2 class="mb-2">
+            @if (!string.IsNullOrEmpty(Model.FirstName) || !string.IsNullOrEmpty(Model.LastName))
+            {
+                @($"{Model.FirstName} {Model.LastName}")
+            }
+            else
+            {
+                @Model.UserName
+            }
+        </h2>
 
-@if (!string.IsNullOrEmpty(Model.About))
-{
-    <p><b>About:</b> @Model.About</p>
-}
+        <div class="text-muted mb-3">@Model.UserName</div>
+
+        @if (!string.IsNullOrEmpty(Model.About))
+        {
+            <p><b>About:</b> @Model.About</p>
+        }
+        else
+        {
+            <p class="text-muted"><b>About:</b> (nu are descriere)</p>
+        }
+    </div>
+</div>
 
 <hr />
 

@@ -12,7 +12,6 @@ public class Category
     
     public bool IsPublic { get; set; } = false;
     
-    [Required]
     public string UserId { get; set; } = string.Empty;
     public virtual ApplicationUser? User { get; set; }
     

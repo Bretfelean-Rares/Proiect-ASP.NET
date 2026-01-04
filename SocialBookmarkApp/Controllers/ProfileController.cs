@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,5 +36,41 @@ public class ProfileController(AppDbContext context, UserManager<ApplicationUser
             return RedirectToAction("Login", "Account");
 
         return RedirectToAction("Show", new { id = userId });
+    }
+    
+    [Authorize]
+    public async Task<IActionResult> Edit()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        return View(user);
+    }
+    
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(string firstName, string lastName, string about, string profileImageUrl)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        user.FirstName = firstName;
+        user.LastName = lastName;
+        user.About = about;
+        user.ProfileImageUrl = profileImageUrl;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            TempData["message"] = "Nu s-a putut salva profilul.";
+            TempData["messageType"] = "alert-danger";
+            return View(user);
+        }
+
+        TempData["message"] = "Profil actualizat!";
+        TempData["messageType"] = "alert-success";
+        return RedirectToAction("MyProfile");
     }
 }
