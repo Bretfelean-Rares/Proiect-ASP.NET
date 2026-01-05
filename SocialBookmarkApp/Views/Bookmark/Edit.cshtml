@@ -24,11 +24,16 @@
         <input asp-for="MediaContent" class="form-control" />
         <span asp-validation-for="MediaContent" class="text-danger"></span>
     </div>
-
+    <div class="mb-3">
+        <label class="form-label">Tag-uri (separate prin virgulă)</label>
+        <input class="form-control" name="tags" value="@ViewBag.TagsText" />
+        <small class="text-muted">Ex: rock, synthwave, concert</small>
+    </div>
     <div class="form-check mb-3">
         <input asp-for="IsPublic" class="form-check-input" />
         <label asp-for="IsPublic" class="form-check-label"></label>
     </div>
+    
 
     <button class="btn btn-primary" type="submit">Salveaza</button>
     <a class="btn btn-secondary" asp-action="Show" asp-route-id="@Model.Id">Renunta</a>

@@ -18,11 +18,26 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Vote> Votes => Set<Vote>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<BookmarkCategory> BookmarkCategories => Set<BookmarkCategory>();
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<BookmarkTag> BookmarkTags { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<BookmarkTag>()
+            .HasKey(bt => new { bt.id, bt.BookmarkId, bt.TagId });
 
+        modelBuilder.Entity<BookmarkTag>()
+            .HasOne(bt => bt.Bookmark)
+            .WithMany(b => b.BookmarkTags)
+            .HasForeignKey(bt => bt.BookmarkId);
+
+        modelBuilder.Entity<BookmarkTag>()
+            .HasOne(bt => bt.Tag)
+            .WithMany(t => t.BookmarkTags)
+            .HasForeignKey(bt => bt.TagId);
+        
         modelBuilder.Entity<BookmarkCategory>()
             .HasKey(bc => new { bc.Id, bc.BookmarkId, bc.CategoryId });
 

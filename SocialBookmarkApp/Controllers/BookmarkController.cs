@@ -74,6 +74,8 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             .Include(b => b.Votes)
             .Include(b => b.Comments)
             .ThenInclude(c => c.User)
+            .Include(b => b.BookmarkTags)
+            .ThenInclude(bt => bt.Tag)
             .Include(b => b.BookmarkCategories)
             .ThenInclude(bc => bc.Category)
             .FirstOrDefault(b => b.Id == id);
@@ -110,7 +112,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public IActionResult New(Bookmark bookmark)
+    public IActionResult New(Bookmark bookmark,string tags)
     {
         bookmark.CreatedAt = DateTime.Now;
         bookmark.UserId = _userManager.GetUserId(User);;
@@ -118,6 +120,37 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         if (ModelState.IsValid)
         {
             db.Bookmarks.Add(bookmark);
+            db.SaveChanges();
+            
+            var tagNames = (tags ?? "")
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim().ToLower())
+                .Where(t => t.Length > 0)
+                .Distinct()
+                .ToList();
+
+            foreach (var name in tagNames)
+            {
+                var existing = db.Tags.FirstOrDefault(t => t.Name == name);
+
+                if (existing == null)
+                {
+                    existing = new Tag { Name = name };
+                    db.Tags.Add(existing);
+                    db.SaveChanges();
+                }
+
+                bool alreadyLinked = db.BookmarkTags.Any(bt => bt.BookmarkId == bookmark.Id && bt.TagId == existing.Id);
+                if (!alreadyLinked)
+                {
+                    db.BookmarkTags.Add(new BookmarkTag
+                    {
+                        BookmarkId = bookmark.Id,
+                        TagId = existing.Id
+                    });
+                }
+            }
+
             db.SaveChanges();
 
             TempData["message"] = "Bookmark-ul a fost adaugat";
@@ -141,9 +174,14 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     [Authorize(Roles="Admin, User")]
     public IActionResult Edit(int id)
     {
-        var bookmark = db.Bookmarks.Find(id);
-        if (bookmark == null) return NotFound();
-
+        var bookmark = db.Bookmarks
+            .Include(b => b.BookmarkTags)
+            .ThenInclude(bt => bt.Tag)
+            .FirstOrDefault(b => b.Id == id);
+        
+        if (bookmark == null) 
+            return NotFound();
+       
         var userId = _userManager.GetUserId(User);
         if (bookmark.UserId != userId && !User.IsInRole("Admin"))
         {
@@ -151,15 +189,18 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             TempData["messageType"] = "alert-danger";
             return RedirectToAction("Index");
         }
-
+        ViewBag.TagsText = string.Join(", ",
+            bookmark.BookmarkTags.Select(bt => bt.Tag.Name));
         return View(bookmark);
     }
     
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public IActionResult Edit(int id, Bookmark requestBookmark)
+    public IActionResult Edit(int id, Bookmark requestBookmark, string tags)
     {
-        var bookmark = db.Bookmarks.Find(id);
+        var bookmark = db.Bookmarks
+            .Include(b => b.BookmarkTags)
+            .FirstOrDefault(b => b.Id == id);
         if (bookmark == null) return NotFound();
 
         var userId = _userManager.GetUserId(User);
@@ -176,6 +217,36 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             bookmark.Description = requestBookmark.Description;
             bookmark.MediaContent = requestBookmark.MediaContent;
             bookmark.IsPublic = requestBookmark.IsPublic;
+            
+            var oldLinks = db.BookmarkTags
+                .Where(bt => bt.BookmarkId == bookmark.Id)
+                .ToList();
+            db.BookmarkTags.RemoveRange(oldLinks);
+            
+            var tagNames = (tags ?? "")
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim())
+                .Where(t => t.Length > 0)
+                .Select(t => t.ToLower())
+                .Distinct()
+                .ToList();
+            
+            foreach (var name in tagNames)
+            {
+                var tag = db.Tags.FirstOrDefault(t => t.Name == name);
+                if (tag == null)
+                {
+                    tag = new Tag { Name = name };
+                    db.Tags.Add(tag);
+                    db.SaveChanges(); // ca să primești tag.Id
+                }
+
+                db.BookmarkTags.Add(new BookmarkTag
+                {
+                    BookmarkId = bookmark.Id,
+                    TagId = tag.Id
+                });
+            }
 
             db.SaveChanges();
 
@@ -255,4 +326,6 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
         return RedirectToAction("Show", new { id = bookmarkId });
     }
+    
+    
 }

@@ -28,6 +28,10 @@
         <label asp-for="MediaContent" class="form-label"></label>
         <input asp-for="MediaContent" class="form-control" />
     </div>
+    <div class="mb-3">
+        <label class="form-label">Tag-uri (separate prin virgulă)</label>
+        <input class="form-control" name="tags" placeholder="ex: rock, synthwave, live" />
+    </div>
 
     <div class="form-check mb-3">
         <input asp-for="IsPublic" class="form-check-input" />

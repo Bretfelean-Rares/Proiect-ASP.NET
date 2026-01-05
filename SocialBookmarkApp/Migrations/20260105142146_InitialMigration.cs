@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SocialBookmarkApp.Migrations
 {
     /// <inheritdoc />
-    public partial class recreatedDB : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,6 +74,21 @@ namespace SocialBookmarkApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -258,6 +273,33 @@ namespace SocialBookmarkApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "BookmarkTags",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    BookmarkId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookmarkTags", x => new { x.id, x.BookmarkId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_BookmarkTags_Bookmarks_BookmarkId",
+                        column: x => x.BookmarkId,
+                        principalTable: "Bookmarks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookmarkTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -398,6 +440,16 @@ namespace SocialBookmarkApp.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookmarkTags_BookmarkId",
+                table: "BookmarkTags",
+                column: "BookmarkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookmarkTags_TagId",
+                table: "BookmarkTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Categories_UserId",
                 table: "Categories",
                 column: "UserId");
@@ -413,9 +465,10 @@ namespace SocialBookmarkApp.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Votes_BookmarkId",
+                name: "IX_Votes_BookmarkId_UserId",
                 table: "Votes",
-                column: "BookmarkId");
+                columns: new[] { "BookmarkId", "UserId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Votes_UserId",
@@ -445,6 +498,9 @@ namespace SocialBookmarkApp.Migrations
                 name: "BookmarkCategories");
 
             migrationBuilder.DropTable(
+                name: "BookmarkTags");
+
+            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
@@ -455,6 +511,9 @@ namespace SocialBookmarkApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Bookmarks");

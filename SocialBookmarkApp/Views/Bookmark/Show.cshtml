@@ -59,18 +59,15 @@
 </div>
 
 
-@*@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
+@if (Model.BookmarkTags != null && Model.BookmarkTags.Any())
 {
     <div class="mb-3">
-        <b>Categorii:</b>
-        <ul>
-            @foreach (var bc in Model.BookmarkCategories)
-            {
-                <li>@bc.Category?.CategoryName</li>
-            }
-        </ul>
+        @foreach (var bt in Model.BookmarkTags)
+        {
+            <span class="badge bg-secondary me-1">@bt.Tag?.Name</span>
+        }
     </div>
-}*@
+}
 
 <hr />
 @if (User.Identity?.IsAuthenticated ?? false)

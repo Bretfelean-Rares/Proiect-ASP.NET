@@ -11,11 +11,9 @@ public class Vote
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Required]
     public int BookmarkId { get; set; }
     public virtual Bookmark Bookmark { get; set; } = null!;
-
-    [Required]
+    
     public string UserId { get; set; } = string.Empty;
     public virtual ApplicationUser? User { get; set; }
 }

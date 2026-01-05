@@ -12,8 +12,8 @@ using SocialBookmarkApp.Data;
 namespace SocialBookmarkApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260103190802_recreatedDB")]
-    partial class recreatedDB
+    [Migration("20260105142146_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -297,6 +297,29 @@ namespace SocialBookmarkApp.Migrations
                     b.ToTable("BookmarkCategories");
                 });
 
+            modelBuilder.Entity("SocialBookmarkApp.Models.BookmarkTag", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("BookmarkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id", "BookmarkId", "TagId");
+
+                    b.HasIndex("BookmarkId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("BookmarkTags");
+                });
+
             modelBuilder.Entity("SocialBookmarkApp.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -355,6 +378,24 @@ namespace SocialBookmarkApp.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("SocialBookmarkApp.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("SocialBookmarkApp.Models.Vote", b =>
                 {
                     b.Property<int>("Id")
@@ -378,9 +419,10 @@ namespace SocialBookmarkApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookmarkId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("BookmarkId", "UserId")
+                        .IsUnique();
 
                     b.ToTable("Votes");
                 });
@@ -466,6 +508,25 @@ namespace SocialBookmarkApp.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SocialBookmarkApp.Models.BookmarkTag", b =>
+                {
+                    b.HasOne("SocialBookmarkApp.Models.Bookmark", "Bookmark")
+                        .WithMany("BookmarkTags")
+                        .HasForeignKey("BookmarkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SocialBookmarkApp.Models.Tag", "Tag")
+                        .WithMany("BookmarkTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bookmark");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("SocialBookmarkApp.Models.Category", b =>
                 {
                     b.HasOne("SocialBookmarkApp.Models.ApplicationUser", "User")
@@ -499,7 +560,7 @@ namespace SocialBookmarkApp.Migrations
             modelBuilder.Entity("SocialBookmarkApp.Models.Vote", b =>
                 {
                     b.HasOne("SocialBookmarkApp.Models.Bookmark", "Bookmark")
-                        .WithMany()
+                        .WithMany("Votes")
                         .HasForeignKey("BookmarkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -530,12 +591,21 @@ namespace SocialBookmarkApp.Migrations
                 {
                     b.Navigation("BookmarkCategories");
 
+                    b.Navigation("BookmarkTags");
+
                     b.Navigation("Comments");
+
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("SocialBookmarkApp.Models.Category", b =>
                 {
                     b.Navigation("BookmarkCategories");
+                });
+
+            modelBuilder.Entity("SocialBookmarkApp.Models.Tag", b =>
+                {
+                    b.Navigation("BookmarkTags");
                 });
 #pragma warning restore 612, 618
         }
