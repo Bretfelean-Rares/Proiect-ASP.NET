@@ -24,8 +24,18 @@ public class ProfileController(AppDbContext context, UserManager<ApplicationUser
         // doar bookmark-uri publice
         user.Bookmarks = user.Bookmarks?
             .Where(b => b.IsPublic)
+            .OrderByDescending(b => b.CreatedAt)
+            .ToList();
+        
+        var currentId = _userManager.GetUserId(User);
+        bool isOwner = currentId == id;
+
+        ViewBag.Categories = _db.Categories
+            .Where(c => c.UserId == id && (c.IsPublic || isOwner))
+            .OrderByDescending(c=>c.Id)
             .ToList();
 
+        ViewBag.IsOwner = isOwner;
         return View(user);
     }
     

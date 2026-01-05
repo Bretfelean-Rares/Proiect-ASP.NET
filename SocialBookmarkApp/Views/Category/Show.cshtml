@@ -1,0 +1,58 @@
+@model SocialBookmarkApp.Models.Category
+
+<h2>@Model.CategoryName</h2>
+
+@if (!Model.IsPublic)
+{
+    <span class="badge bg-secondary">Privata</span>
+}
+else
+{
+    <span class="badge bg-success">Publica</span>
+}
+
+<hr />
+@if (User.Identity?.IsAuthenticated ?? false && Model.UserId == ViewBag.UserCurent)
+{
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline">
+        <button class="btn btn-danger"
+                onclick="return confirm('Sigur vrei sa stergi categoria?');">
+            Sterge categoria
+        </button>
+    </form>
+}
+
+@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
+{
+    foreach (var bc in Model.BookmarkCategories)
+    {
+        var bookmark = bc.Bookmark;
+
+        <div class="card mb-3 p-3">
+            <h5>@bookmark.Title</h5>
+
+            @if (!string.IsNullOrEmpty(bookmark.Description))
+            {
+                <p>@bookmark.Description</p>
+            }
+
+            <small class="text-muted">
+                de @bookmark.User?.UserName
+            </small>
+
+            <br />
+
+            <a class="btn btn-outline-primary btn-sm"
+               asp-controller="Bookmark"
+               asp-action="Show"
+               asp-route-id="@bookmark.Id">
+                Vezi bookmark
+            </a>
+        </div>
+        
+    }
+}
+else
+{
+    <p class="text-muted">Aceasta categorie nu contine bookmark-uri.</p>
+}

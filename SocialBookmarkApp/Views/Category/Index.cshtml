@@ -1,0 +1,18 @@
+<h2>Categoriile mele</h2>
+
+<a class="btn btn-primary mb-3" asp-action="New">Adauga categorie</a>
+
+@if (ViewBag.Categories != null)
+{
+    foreach (var c in ViewBag.Categories)
+    {
+        <div class="card mb-2 p-2">
+            <a asp-action="Show" asp-route-id="@c.Id">
+                @c.CategoryName
+            </a>
+            <span class="text-muted">
+                (@(c.IsPublic ? "Publica" : "Privata"))
+            </span>
+        </div>
+    }
+}

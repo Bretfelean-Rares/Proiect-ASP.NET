@@ -77,7 +77,9 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             .Include(b => b.BookmarkCategories)
             .ThenInclude(bc => bc.Category)
             .FirstOrDefault(b => b.Id == id);
-
+        ViewBag.UserCategories = db.Categories
+            .Where(c => c.UserId == _userManager.GetUserId(User))
+            .ToList();
         ViewBag.UserHasLiked = bookmark.Votes
             .Any(v => v.UserId == _userManager.GetUserId(User));
         if (bookmark == null)
@@ -211,5 +213,46 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
+    [Authorize]
+    public IActionResult AddCategory(int bookmarkId, int categoryId)
+    {
+        var userId = _userManager.GetUserId(User);
 
+        var bookmark = db.Bookmarks
+            .FirstOrDefault(b => b.Id == bookmarkId);
+
+        if (bookmark == null)
+        {
+            TempData["message"] = "Bookmark invalid";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        bool exists = db.BookmarkCategories.Any(bc =>
+            bc.BookmarkId == bookmarkId &&
+            bc.CategoryId == categoryId
+        );
+
+        if (exists)
+        {
+            TempData["message"] = "Bookmark-ul este deja în categorie";
+            TempData["messageType"] = "alert-warning";
+        }
+        else
+        {
+            db.BookmarkCategories.Add(new BookmarkCategory
+            {
+                BookmarkId = bookmarkId,
+                CategoryId = categoryId
+            });
+
+            db.SaveChanges();
+
+            TempData["message"] = "Bookmark adăugat în categorie";
+            TempData["messageType"] = "alert-success";
+        }
+
+        return RedirectToAction("Show", new { id = bookmarkId });
+    }
 }

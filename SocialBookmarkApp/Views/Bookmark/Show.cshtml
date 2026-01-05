@@ -58,7 +58,8 @@
     </form>
 </div>
 
-@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
+
+@*@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
 {
     <div class="mb-3">
         <b>Categorii:</b>
@@ -69,10 +70,27 @@
             }
         </ul>
     </div>
-}
+}*@
 
 <hr />
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <form asp-controller="Bookmark" asp-action="AddCategory" method="post">
 
+        <input type="hidden" name="bookmarkId" value="@Model.Id" />
+
+        <select name="categoryId" class="form-select">
+            @foreach (var c in ViewBag.UserCategories)
+            {
+                <option value="@c.Id">@c.CategoryName</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-success mt-2">
+            Adauga in categorie
+        </button>
+    </form>
+}
 <h4>Comentarii</h4>
 
 @if (Model.Comments != null && Model.Comments.Any())
