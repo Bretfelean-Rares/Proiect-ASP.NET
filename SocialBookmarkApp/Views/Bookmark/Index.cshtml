@@ -1,5 +1,16 @@
 <br />
-<h2 class="text-center">Afisare bookmark-uri</h2>
+@{
+    var s = ViewBag.SearchString as string;
+}
+
+@if (!string.IsNullOrEmpty(s))
+{
+    <h2 class="text-center">Afisare rezultate cautare: "@s"</h2>
+}
+else
+{
+    <h2 class="text-center">Afisare bookmark-uri</h2>
+}
 
 <div class="mb-3">
     <a class="btn @(ViewBag.Sort == "recent" ? "btn-primary" : "btn-outline-primary")"

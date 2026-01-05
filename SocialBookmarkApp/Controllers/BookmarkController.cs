@@ -18,21 +18,44 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     [AllowAnonymous]
     public IActionResult Index(string sort, int page)
     {
-        int pageSize = 5;
-        if(page < 1) 
-            page = 1;
-        if (sort == null)
-            sort = "recent";
-        
-        ViewBag.Sort = sort;
-        ViewBag.Page = page;
         var userId = _userManager.GetUserId(User);
-        
         var bookmarks = db.Bookmarks
             .Include(b => b.User)
             .Include(b => b.Votes)   
             .Where(b => b.IsPublic == true ||
                         (userId != null && b.UserId == userId));
+        int pageSize = 5;
+        if(page < 1) 
+            page = 1;
+        if (sort == null)
+            sort = "recent";
+        var search = "";
+        if (Convert.ToString(HttpContext.Request.Query["search"]) !=
+            null)
+        {
+            search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+            // Cautare in articol (Title si Content)
+            List<int> bookmarksIds = db.Bookmarks.Where
+            (
+                bm => bm.Title.Contains(search)
+                      || bm.Description.Contains(search)
+            ).Select(b => b.Id).ToList();
+            var TagsIds = db.BookmarkTags
+                .Include(bt => bt.Tag)
+                .Where(bt => bt.Tag.Name.Contains(search))
+                .Select(bt => bt.BookmarkId)
+                .Distinct()
+                .ToList();
+            List<int> mergedIds =
+                bookmarksIds.Union(TagsIds).ToList();
+            bookmarks = db.Bookmarks.Where(bm => mergedIds.Contains(bm.Id))
+                .Include("User")
+                .OrderBy(a => a.CreatedAt);
+        }
+        ViewBag.SearchString = search;
+            
+        ViewBag.Sort = sort;
+        ViewBag.Page = page;
 
         if (sort == "recent")
         {

@@ -47,14 +47,14 @@
                             </li>
                         }
                     </ul>
-                    <form class="d-flex me-3" method="get" action="#">
-                        <input class="form-control me-2"
-                               type="search"
-                               placeholder="Caută bookmark-uri..."
-                               aria-label="Search">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
+                    <form method="GET" asp-controller="Bookmark" asp-action="Index">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control"
+                                   placeholder="Cauta bookmarks..." name="search"
+                                   value="@ViewBag.SearchString">
+                            <button class="btn btn-outline-success"
+                                    type="submit"><i class="bi bi-search"></i></button>
+                        </div>
                     </form>
                     <partial name="_LoginPartial" />
                 </div>

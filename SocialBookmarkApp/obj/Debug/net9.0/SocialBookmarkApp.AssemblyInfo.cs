@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SocialBookmarkApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ccd51da13e99a3041b6d84b44c9771a03f4bfcf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c328333e59d520418c9ab93c9d9de91c60c3148f")]
 [assembly: System.Reflection.AssemblyProductAttribute("SocialBookmarkApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SocialBookmarkApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
