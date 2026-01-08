@@ -1,0 +1,39 @@
+@model SocialBookmarkApp.Models.Category
+<h2 class="text-center">Categorii publice</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert @ViewBag.Alert text-center">
+        @ViewBag.Message
+    </div>
+}
+
+@{
+    var categories = ViewBag.Categories as IEnumerable<Category>;
+}
+@if (categories == null || !categories.Any())
+{
+    <p class="text-center">Nu există categorii publice.</p>
+}
+else
+{
+    foreach (var cat in ViewBag.Categories)
+    {
+        <div class="card p-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5>@cat.CategoryName</h5>
+                    <small class="text-muted">
+                        Creată de: @cat.User?.UserName
+                    </small>
+                </div>
+
+                <a class="btn btn-primary"
+                   asp-action="Show"
+                   asp-route-id="@cat.Id">
+                    Vezi
+                </a>
+            </div>
+        </div>
+    }
+}

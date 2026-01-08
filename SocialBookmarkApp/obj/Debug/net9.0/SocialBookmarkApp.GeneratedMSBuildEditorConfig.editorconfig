@@ -64,12 +64,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQm9va21hcmsvU2hvdy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/Views/Category/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcnkvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/Views/Category/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcnkvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/Views/Category/New.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcnkvTmV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/Views/Category/PublicIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcnkvUHVibGljSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/bretfe/Documents/GitHub/Proiect-ASP.NET/SocialBookmarkApp/Views/Category/Show.cshtml]

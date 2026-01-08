@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialBookmarkApp.Data;
 using SocialBookmarkApp.Models;
-
 namespace SocialBookmarkApp.Controllers;
 
 public class BookmarkController(AppDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : Controller
@@ -24,7 +23,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             .Include(b => b.Votes)   
             .Where(b => b.IsPublic == true ||
                         (userId != null && b.UserId == userId));
-        int pageSize = 5;
+        int pageSize = 4;
         if(page < 1) 
             page = 1;
         if (sort == null)
@@ -135,7 +134,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public IActionResult New(Bookmark bookmark,string tags)
+    public IActionResult New(Bookmark bookmark,string? tags)
     {
         bookmark.CreatedAt = DateTime.Now;
         bookmark.UserId = _userManager.GetUserId(User);;
@@ -311,6 +310,12 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     [Authorize]
     public IActionResult AddCategory(int bookmarkId, int categoryId)
     {
+        if (categoryId==0)
+        {
+            TempData["message"] = "Te rog selectează o categorie sau creează una nouă in meniul categorii.";
+            TempData["messageType"] = "alert-warning";
+            return RedirectToAction("Show", new { id = bookmarkId });
+        }
         var userId = _userManager.GetUserId(User);
 
         var bookmark = db.Bookmarks

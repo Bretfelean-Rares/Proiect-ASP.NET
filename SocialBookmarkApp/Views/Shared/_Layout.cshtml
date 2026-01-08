@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/SocialBookmarkApp.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -46,12 +47,19 @@
                                 </a>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-controller="Category"
+                               asp-action="PublicIndex">
+                                Categorii publice
+                            </a>
+                        </li>
                     </ul>
                     <form method="GET" asp-controller="Bookmark" asp-action="Index">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control"
                                    placeholder="Cauta bookmarks..." name="search"
-                                   value="@ViewBag.SearchString">
+                                   value="@ViewBag.SearchString" style="width: 280px;">
                             <button class="btn btn-outline-success"
                                     type="submit"><i class="bi bi-search"></i></button>
                         </div>

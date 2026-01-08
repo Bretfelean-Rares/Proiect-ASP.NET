@@ -12,8 +12,9 @@ else
 }
 
 <hr />
-@if (User.Identity?.IsAuthenticated ?? false && Model.UserId == ViewBag.UserCurent)
-{
+@if ((User.Identity?.IsAuthenticated ?? false && Model.UserId == ViewBag.UserCurent) || (ViewBag.EsteAdmin ?? false))
+{ 
+    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Editeaza</a>
     <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline">
         <button class="btn btn-danger"
                 onclick="return confirm('Sigur vrei sa stergi categoria?');">

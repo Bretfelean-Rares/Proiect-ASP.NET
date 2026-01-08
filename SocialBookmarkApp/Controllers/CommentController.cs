@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SocialBookmarkApp.Data;
 using SocialBookmarkApp.Models;
 
@@ -40,7 +41,7 @@ public class CommentController(AppDbContext context, UserManager<ApplicationUser
     }
     
     [HttpPost]
-    [Authorize] 
+    [Authorize(Roles = "Admin, User")] 
     public IActionResult Delete(int id)
     {
         Comment? comm = db.Comments.Find(id);
@@ -50,7 +51,7 @@ public class CommentController(AppDbContext context, UserManager<ApplicationUser
             return NotFound();
         }
 
-        if (comm.UserId == _userManager.GetUserId(User))
+        if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
         {
             int bookmarkId = comm.BookmarkId;
 
@@ -68,27 +69,35 @@ public class CommentController(AppDbContext context, UserManager<ApplicationUser
         return RedirectToAction("Show", "Bookmark", new { id = comm.BookmarkId });
     }
     
-    [Authorize] 
+    [Authorize(Roles = "Admin,User")]
     public IActionResult Edit(int id)
     {
-        Comment? comm = db.Comments.Find(id);
+        var category = db.Categories
+            .Include(c => c.BookmarkCategories)
+            .ThenInclude(bc => bc.Bookmark)
+            .FirstOrDefault(c => c.Id == id);
 
-        if (comm is null)
+        if (category == null) return NotFound();
+
+        var userId = _userManager.GetUserId(User);
+        if (category.UserId != userId && !User.IsInRole("Admin"))
         {
-            return NotFound();
+            TempData["message"] = "Nu aveti dreptul sa editati aceasta categorie.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
         }
 
-        if (comm.UserId == _userManager.GetUserId(User) /* || User.IsInRole("Admin") */)
+        if (TempData.ContainsKey("message"))
         {
-            return View(comm);
+            ViewBag.Message = TempData["message"];
+            ViewBag.Alert = TempData["messageType"];
         }
 
-        TempData["message"] = "Nu aveti dreptul sa editati comentariul";
-        TempData["messageType"] = "alert-danger";
-        return RedirectToAction("Show", "Bookmark", new { id = comm.BookmarkId });
+        return View(category);
     }
+    
     [HttpPost]
-    [Authorize] // cand adaugi roluri: [Authorize(Roles = "User,Admin")]
+    [Authorize(Roles = "Admin, User")] 
     public IActionResult Edit(int id, Comment requestComment)
     {
         Comment? comm = db.Comments.Find(id);
@@ -98,7 +107,7 @@ public class CommentController(AppDbContext context, UserManager<ApplicationUser
             return NotFound();
         }
 
-        if (comm.UserId == _userManager.GetUserId(User) /* || User.IsInRole("Admin") */)
+        if (comm.UserId == _userManager.GetUserId(User)  || User.IsInRole("Admin") )
         {
             if (ModelState.IsValid)
             {

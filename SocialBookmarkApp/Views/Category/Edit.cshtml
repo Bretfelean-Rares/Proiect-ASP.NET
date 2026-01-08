@@ -1,0 +1,59 @@
+@model SocialBookmarkApp.Models.Category
+
+<h2>Editare categorie</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="CategoryName" class="form-label"></label>
+        <input asp-for="CategoryName" class="form-control" />
+        <span asp-validation-for="CategoryName" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsPublic" class="form-check-input" />
+        <label asp-for="IsPublic" class="form-check-label"></label>
+    </div>
+
+    <button class="btn btn-success" type="submit">Salveaza</button>
+    <a class="btn btn-secondary" asp-action="Index">Inapoi</a>
+</form>
+@if (Model.BookmarkCategories != null && Model.BookmarkCategories.Any())
+{
+    <ul class="list-group">
+        @foreach (var bc in Model.BookmarkCategories)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <b>@bc.Bookmark?.Title</b>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-secondary btn-sm"
+                       asp-controller="Bookmark"
+                       asp-action="Show"
+                       asp-route-id="@bc.BookmarkId">
+                        Vezi
+                    </a>
+
+                    <form asp-controller="Category"
+                          asp-action="RemoveBookmark"
+                          method="post"
+                          class="d-inline">
+                        <input type="hidden" name="categoryId" value="@Model.Id" />
+                        <input type="hidden" name="bookmarkId" value="@bc.BookmarkId" />
+
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            Scoate
+                        </button>
+                    </form>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nu exista bookmark-uri in aceasta categorie.</p>
+}
