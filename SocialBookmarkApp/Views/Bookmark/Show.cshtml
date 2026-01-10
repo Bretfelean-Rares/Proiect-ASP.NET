@@ -42,14 +42,19 @@
 
     @if (!string.IsNullOrEmpty(Model.MediaContent))
     {
-        if (Model.MediaContent.StartsWith("http"))
-        {
-            <img src="@Model.MediaContent" class="img-fluid rounded"/>
-        }
-        else
-        {
-            @Html.Raw(Model.MediaContent)
-        }
+        
+        <div class="media-frame mb-3">
+            @if (Model.MediaContent.EndsWith(".mp4") || Model.MediaContent.EndsWith(".mov"))
+            {
+                <video controls>
+                    <source src="@Model.MediaContent" type="video/mp4" />
+                </video>
+            }
+            else
+            {
+                <img src="@Model.MediaContent" />
+            }
+        </div>
     }
 
     <div>

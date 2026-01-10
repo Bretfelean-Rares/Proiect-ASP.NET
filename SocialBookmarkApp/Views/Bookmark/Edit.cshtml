@@ -4,7 +4,7 @@
 <h2 class="text-center">Editare bookmark</h2>
 <br />
 
-<form asp-action="Edit" asp-controller="Bookmark" asp-route-id="@Model.Id" method="post">
+<form asp-action="Edit" asp-controller="Bookmark" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="mb-3">
@@ -18,12 +18,58 @@
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
+    @if (!string.IsNullOrEmpty(Model.MediaContent))
+    {
+        @if (Model.MediaContent.EndsWith(".mp4") || Model.MediaContent.EndsWith(".mov"))
+        {
+            <video controls style="max-width:100%; max-height:250px;">
+                <source src="@Model.MediaContent" type="video/mp4"/>
+            </video>
+        }
+        else
+        {
+            <img src="@Model.MediaContent"
+                 style="max-width:100%; max-height:250px; object-fit:contain;"
+                 class="rounded"/>
+        }
 
+        <div class="form-check mt-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="RemoveMedia"
+                   value="true"
+                   id="removeMedia">
+            <label class="form-check-label" for="removeMedia">
+                Șterge media
+            </label>
+        </div>
+    }
+    else
+    {
     <div class="mb-3">
-        <label asp-for="MediaContent" class="form-label"></label>
-        <input asp-for="MediaContent" class="form-control" />
-        <span asp-validation-for="MediaContent" class="text-danger"></span>
+        <label class="form-label">Adaugă media nouă</label>
+        <input type="file" name="MediaFile" id="mediaFile" class="form-control" />
+        <div class="text-danger mt-2" id="fileErr"></div>
+
+        <script>
+          const MAX = 20 * 1024 * 1024; // 20MB
+          const input = document.getElementById("mediaFile");
+          const err = document.getElementById("fileErr");
+          const form = input.closest("form");
+        
+          form.addEventListener("submit", (e) => {
+            err.textContent = "";
+            if (input.files && input.files.length > 0) {
+              const f = input.files[0];
+              if (f.size > MAX) {
+                e.preventDefault();
+                err.textContent = "Fișierul este prea mare. Dimensiunea maximă este 20 MB.";
+              }
+            }
+          });
+        </script>
     </div>
+    }
     <div class="mb-3">
         <label class="form-label">Tag-uri (separate prin virgulă)</label>
         <input class="form-control" name="tags" value="@ViewBag.TagsText" />
