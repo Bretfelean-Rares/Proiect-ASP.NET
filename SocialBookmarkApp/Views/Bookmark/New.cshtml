@@ -10,10 +10,7 @@
 <br />
 <h2 class="text-center">Adaugare bookmark</h2>
 
-<form asp-action="New"
-      asp-controller="Bookmark"
-      method="post"
-      enctype="multipart/form-data">
+<form method="post">
 
     <div class="mb-3">
         <label asp-for="Title" class="form-label"></label>
@@ -28,32 +25,10 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Încarcă imagine / video</label>
-        <input type="file"
-               name="MediaFile"
-               id="mediaFile"
-               class="form-control" />
-        <div class="text-danger mt-2" id="fileErr"></div>
-
-        <script>
-  const MAX = 20 * 1024 * 1024; // 20MB
-  const input = document.getElementById("mediaFile");
-  const err = document.getElementById("fileErr");
-  const form = input.closest("form");
-
-  form.addEventListener("submit", (e) => {
-    err.textContent = "";
-    if (input.files && input.files.length > 0) {
-      const f = input.files[0];
-      if (f.size > MAX) {
-        e.preventDefault();
-        err.textContent = "Fișierul este prea mare. Dimensiunea maximă este 20 MB.";
-      }
-    }
-  });
-</script>
+        <label asp-for="MediaContent" class="form-label"></label>
+        <input asp-for="MediaContent" class="form-control" />
     </div>
-    
+
     <div class="form-check mb-3">
         <input asp-for="IsPublic" class="form-check-input" />
         <label asp-for="IsPublic" class="form-check-label"></label>

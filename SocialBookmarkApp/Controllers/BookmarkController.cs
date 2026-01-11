@@ -6,13 +6,12 @@ using SocialBookmarkApp.Data;
 using SocialBookmarkApp.Models;
 namespace SocialBookmarkApp.Controllers;
 
-public class BookmarkController(AppDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IWebHostEnvironment env) : Controller
+public class BookmarkController(AppDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : Controller
 {
     
     private readonly AppDbContext db = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
-    private readonly IWebHostEnvironment _env = env;
     
     // GET
     [AllowAnonymous]
@@ -135,49 +134,11 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
 
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public async Task<IActionResult> New(Bookmark bookmark,  IFormFile? MediaFile, string? tags)
+    public IActionResult New(Bookmark bookmark,string? tags)
     {
         bookmark.CreatedAt = DateTime.Now;
         bookmark.UserId = _userManager.GetUserId(User);;
         
-        if (MediaFile != null && MediaFile.Length > 0)
-        {
-            
-            var allowedExtensions = new[]
-            {
-                ".jpg", ".jpeg", ".png", ".gif",
-                ".mp4", ".mov"
-            };
-
-            var extension = Path.GetExtension(MediaFile.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(extension))
-            {
-                ModelState.AddModelError(
-                    "MediaContent",
-                    "Fișierul trebuie să fie imagine sau video."
-                );
-                return View(bookmark);
-            }
-            
-            var fileName = Guid.NewGuid() + extension;
-            var storagePath = Path.Combine(
-                _env.WebRootPath,
-                "media",
-                fileName
-            );
-
-            using (var stream = new FileStream(storagePath, FileMode.Create))
-            {
-                await MediaFile.CopyToAsync(stream);
-            }
-
-            bookmark.MediaContent = "/media/" + fileName;
-
-            
-            ModelState.Remove(nameof(bookmark.MediaContent));
-        }
-
         if (ModelState.IsValid)
         {
             db.Bookmarks.Add(bookmark);
@@ -257,8 +218,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public async Task<IActionResult> Edit(int id, Bookmark requestBookmark, string? tags,IFormFile? MediaFile,
-        bool RemoveMedia)
+    public IActionResult Edit(int id, Bookmark requestBookmark, string tags)
     {
         var bookmark = db.Bookmarks
             .Include(b => b.BookmarkTags)
@@ -272,68 +232,12 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             TempData["messageType"] = "alert-danger";
             return RedirectToAction("Index");
         }
-        if (!string.IsNullOrEmpty(bookmark.MediaContent))
-        {
-            if (RemoveMedia)
-            {
-                var oldPath = Path.Combine(
-                    _env.WebRootPath,
-                    bookmark.MediaContent.TrimStart('/')
-                );
-
-                if (System.IO.File.Exists(oldPath))
-                    System.IO.File.Delete(oldPath);
-
-                bookmark.MediaContent = null;
-                ModelState.Remove(nameof(bookmark.MediaContent));
-            }
-            else if (MediaFile != null)
-            {
-                ModelState.AddModelError(
-                    "MediaContent",
-                    "Poți doar să ștergi media existentă. Salvează și adaugă ulterior."
-                );
-                return View(requestBookmark);
-            }
-        }
-        else
-        {
-            if (MediaFile != null && MediaFile.Length > 0)
-            {
-                var allowedExtensions = new[]
-                {
-                    ".jpg", ".jpeg", ".png", ".gif",
-                    ".mp4", ".mov"
-                };
-
-                var ext = Path.GetExtension(MediaFile.FileName).ToLower();
-                if (!allowedExtensions.Contains(ext))
-                {
-                    ModelState.AddModelError(
-                        "MediaContent",
-                        "Fișierul trebuie să fie imagine sau video."
-                    );
-                    return View(requestBookmark);
-                }
-
-                var fileName = Guid.NewGuid() + ext;
-                var storagePath = Path.Combine(_env.WebRootPath, "media", fileName);
-
-                using (var stream = new FileStream(storagePath, FileMode.Create))
-                {
-                    await MediaFile.CopyToAsync(stream);
-                }
-
-                bookmark.MediaContent = "/media/" + fileName;
-                ModelState.Remove(nameof(bookmark.MediaContent));
-            }
-        }
-        
 
         if (ModelState.IsValid)
         {
             bookmark.Title = requestBookmark.Title;
             bookmark.Description = requestBookmark.Description;
+            bookmark.MediaContent = requestBookmark.MediaContent;
             bookmark.IsPublic = requestBookmark.IsPublic;
             
             var oldLinks = db.BookmarkTags
@@ -392,19 +296,6 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
             TempData["message"] = "Nu aveti dreptul sa stergeti acest bookmark.";
             TempData["messageType"] = "alert-danger";
             return RedirectToAction("Index");
-        }
-        
-        if (!string.IsNullOrEmpty(bookmark.MediaContent))
-        {
-            var filePath = Path.Combine(
-                _env.WebRootPath,
-                bookmark.MediaContent.TrimStart('/')
-            );
-
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
         }
 
         db.Bookmarks.Remove(bookmark);

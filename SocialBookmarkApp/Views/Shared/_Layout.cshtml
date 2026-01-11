@@ -28,7 +28,7 @@
                             <a class="nav-link text-dark"
                                asp-controller="Home"
                                asp-action="Index">
-                                Bookmarks
+                                Home
                             </a>
                         </li>
 
@@ -42,18 +42,18 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
-                                   asp-controller="Category"
-                                   asp-action="PublicIndex">
-                                    Categorii publice
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" asp-controller="Category" asp-action="Index">
-                                    Categoriile mele
+                                    Categorii
                                 </a>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-controller="Category"
+                               asp-action="PublicIndex">
+                                Categorii publice
+                            </a>
+                        </li>
                     </ul>
                     <form method="GET" asp-controller="Bookmark" asp-action="Index">
                         <div class="input-group mb-3">
