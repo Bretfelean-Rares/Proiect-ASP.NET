@@ -228,13 +228,13 @@ public static class SeedData
     
     void LinkCat(Bookmark b, Category c) => context.BookmarkCategories.Add(new BookmarkCategory { BookmarkId = b.Id, CategoryId = c.Id });
     
-    LinkCat(b1, c1); // Rock Classics
+    LinkCat(b1, c1); 
     LinkCat(b6, c1);
-    LinkCat(b3, c2); // Live Sessions
+    LinkCat(b3, c2); 
     LinkCat(b7, c2);
     LinkCat(b2, c3);
     LinkCat(b5, c4); 
-    LinkCat(b8, c5); // Discover Weekly
+    LinkCat(b8, c5); 
 
 
     context.SaveChanges();

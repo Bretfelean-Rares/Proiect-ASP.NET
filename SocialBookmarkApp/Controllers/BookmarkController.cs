@@ -156,10 +156,15 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
                 var existing = db.Tags.FirstOrDefault(t => t.Name == name);
 
                 if (existing == null)
-                {
-                    existing = new Tag { Name = name };
-                    db.Tags.Add(existing);
-                    db.SaveChanges();
+                {   
+                    if(name.Length >50)
+                        ModelState.AddModelError("tags", $"Tag-ul '{name[..Math.Min(name.Length, 20)]}...' e prea lung (max 50).");
+                    else
+                    {
+                        existing = new Tag { Name = name };
+                        db.Tags.Add(existing);
+                        db.SaveChanges();
+                    }
                 }
 
                 bool alreadyLinked = db.BookmarkTags.Any(bt => bt.BookmarkId == bookmark.Id && bt.TagId == existing.Id);
@@ -252,15 +257,22 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
                 .Select(t => t.ToLower())
                 .Distinct()
                 .ToList();
-            
+           
             foreach (var name in tagNames)
             {
+                if (name.Length > 50)
+                {
+                    ModelState.AddModelError("tags",
+                        $"Tag-ul '{name[..Math.Min(name.Length, 20)]}...' e prea lung (max 50).");
+                    continue; // IMPORTANT: nu mai folosi tag=null
+                }
+
                 var tag = db.Tags.FirstOrDefault(t => t.Name == name);
                 if (tag == null)
                 {
                     tag = new Tag { Name = name };
                     db.Tags.Add(tag);
-                    db.SaveChanges(); // ca să primești tag.Id
+                    db.SaveChanges();
                 }
 
                 db.BookmarkTags.Add(new BookmarkTag
@@ -268,6 +280,11 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
                     BookmarkId = bookmark.Id,
                     TagId = tag.Id
                 });
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.TagsText = tags ?? "";
+                return View(requestBookmark);
             }
 
             db.SaveChanges();

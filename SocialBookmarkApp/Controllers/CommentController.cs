@@ -120,7 +120,7 @@ public class CommentController(AppDbContext context, UserManager<ApplicationUser
                 return RedirectToAction("Show", "Bookmark", new { id = comm.BookmarkId });
             }
 
-            // ca sa nu pierzi BookmarkId in view, il pastram
+            
             requestComment.BookmarkId = comm.BookmarkId;
             return View(requestComment);
         }

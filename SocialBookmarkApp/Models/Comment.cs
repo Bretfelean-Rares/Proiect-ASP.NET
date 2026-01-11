@@ -7,7 +7,7 @@ public class Comment
     [Key]
     public int Id { get; set; }
     
-    [Required, StringLength(1500)]
+    [Required, StringLength(1500, ErrorMessage = "Comentariul nu poate avea mai mult de 1500 de caractere")]
     public string Content { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -8,6 +8,7 @@ public class Category
     public int Id { get; set; }
     
     [Required(ErrorMessage = "Numele categoriei este obligatoriu")]
+    [StringLength(100, ErrorMessage = "Titlul nu poate avea mai mult de 100 de caractere")]
     public string CategoryName { get; set; }
     
     public bool IsPublic { get; set; } = false;

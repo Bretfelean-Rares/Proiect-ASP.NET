@@ -13,7 +13,7 @@ public class Bookmark
     [MinLength(5, ErrorMessage = "Titlul trebuie sa aiba mai mult de 5 caractere")]
     public string Title { get; set; } = string.Empty;
     
-    [StringLength(1000)]
+    [StringLength(1000, ErrorMessage="Descrierea nu poate avea mai mult de 1000 de caractere")]
     public string? Description { get; set; }
     
     public string? MediaContent { get; set; }

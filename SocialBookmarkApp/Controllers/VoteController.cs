@@ -16,10 +16,11 @@ public class VoteController(AppDbContext context, UserManager<ApplicationUser> u
     {
         return View();
     }
-    
+    [HttpGet]
+    public IActionResult Toggle() => RedirectToAction("Index", "Bookmark");
     [HttpPost]
     [Authorize]
-    public IActionResult Toggle(int bookmarkId)
+    public IActionResult Toggle(int bookmarkId) 
     {
         var userId = _userManager.GetUserId(User);
 

@@ -21,7 +21,7 @@ public class ProfileController(AppDbContext context, UserManager<ApplicationUser
         if (user == null)
             return NotFound();
 
-        // doar bookmark-uri publice
+        //bookmarkuri publice
         user.Bookmarks = user.Bookmarks?
             .Where(b => b.IsPublic)
             .OrderByDescending(b => b.CreatedAt)

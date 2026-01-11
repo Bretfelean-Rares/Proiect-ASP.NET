@@ -103,7 +103,7 @@ public class CategoryController(AppDbContext context, UserManager<ApplicationUse
 
         var userId = _userManager.GetUserId(User);
 
-        // Doar owner (si optional Admin) poate sterge
+        
         if (category.UserId != userId && !User.IsInRole("Admin"))
         {
             TempData["message"] = "Nu aveti dreptul sa stergeti categoria.";
@@ -111,7 +111,7 @@ public class CategoryController(AppDbContext context, UserManager<ApplicationUse
             return RedirectToAction("Index", "Home");
         }
 
-        // Stergem intai legaturile din tabelul asociativ
+        
         if (category.BookmarkCategories != null && category.BookmarkCategories.Any())
         {
             db.BookmarkCategories.RemoveRange(category.BookmarkCategories);
