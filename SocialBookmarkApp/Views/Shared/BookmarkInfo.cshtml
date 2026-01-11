@@ -9,14 +9,16 @@
     }
     @if (!string.IsNullOrEmpty(Model.MediaContent))
     {
-        if (Model.MediaContent.StartsWith("http"))
+        <div class="media-preview mb-3">
+        @if (Model.MediaContent.StartsWith("http") )
         {
             <img src="@Model.MediaContent" class="img-fluid rounded" />
         }
         else
         {
             @Html.Raw(Model.MediaContent)
-        }
+            }
+        </div>    
     }
 
     <small class="text-muted">

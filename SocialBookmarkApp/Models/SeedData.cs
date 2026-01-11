@@ -112,83 +112,133 @@ public static class SeedData
                             UserId = "8e445865-a24d-4543-a6c6-9443d048cdb2"
                         }
                     );
-                    
-                    context.Bookmarks.AddRange(
+    context.SaveChanges();
+    var admin = context.Users.FirstOrDefault(u => u.Email == "admin@test.com");
+    var user1 = context.Users.FirstOrDefault(u => u.Email == "user@test.com");
+    var user2 = context.Users.FirstOrDefault(u => u.Email == "user2@test.com");
 
-        
-        new Bookmark
-        {
-            Title = "Radiohead – discografie recomandata",
-            Description = "Un punct bun de pornire: OK Computer, In Rainbows, Kid A.",
-            MediaContent = null,
-            IsPublic = true,
-            CreatedAt = DateTime.UtcNow.AddDays(-6),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb1" // user@test.com
-        },
-        
-        new Bookmark
-        {
-            Title = "Albume jazz pentru studiu",
-            Description = "Miles Davis – Kind of Blue, John Coltrane – Blue Train.",
-            MediaContent = null,
-            IsPublic = false,
-            CreatedAt = DateTime.UtcNow.AddDays(-5),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb2" // user2@test.com
-        },
+    if (admin == null || user1 == null || user2 == null)
+        return;
+    admin.FirstName = "Admin";
+    admin.LastName = "Boss";
+    admin.About = "Curator de playlist-uri. Testează tot.";
+    admin.ProfileImageUrl = "https://media.istockphoto.com/id/2134890875/video/hell-animation-on-green-screen-emotion-character-4k-video.jpg?s=640x640&k=20&c=PDqg9fu9aSrKfqEXyTeG0rclfpCpBEhfFGA0I7Av_pw=";
 
-        
-        new Bookmark
-        {
-            Title = "Pink Floyd – The Dark Side of the Moon",
-            Description = "Unul dintre cele mai influente albume din istorie.",
-            MediaContent = "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png",
-            IsPublic = true,
-            CreatedAt = DateTime.UtcNow.AddDays(-4),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb1"
-        },
+    user1.FirstName = "Mara";
+    user1.LastName = "Pop";
+    user1.About = "";
+    user1.ProfileImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOHljug4PmU0UVPrp4Rkdn72prvTn_kkAQIg&s";
 
-        
-        new Bookmark
-        {
-            Title = "Daft Punk – imagine promotionala",
-            Description = "Duo electronic iconic.",
-            MediaContent = "https://upload.wikimedia.org/wikipedia/commons/a/ae/Daft_Punk_in_2013.jpg",
-            IsPublic = true,
-            CreatedAt = DateTime.UtcNow.AddDays(-3),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb2"
-        },
+    user2.FirstName = "Radu";
+    user2.LastName = "Ionescu";
+    user2.About = "🍷🎷❤️";
+    user2.ProfileImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Profile_Picture_for_youtube.gif/250px-Profile_Picture_for_youtube.gif";
+    
+    var c1 = new Category { CategoryName = "Rock Classics", IsPublic = true,  UserId = user1.Id };
+    var c2 = new Category { CategoryName = "Live Sessions", IsPublic = true,  UserId = user1.Id };
+    var c3 = new Category { CategoryName = "Synthwave",     IsPublic = true,  UserId = user2.Id };
+    var c4 = new Category { CategoryName = "Production",IsPublic = false, UserId = admin.Id };
+    var c5 = new Category { CategoryName = "Discover Weekly",IsPublic = true, UserId = admin.Id };
 
-        
-        new Bookmark
-        {
-            Title = "Arctic Monkeys – Do I Wanna Know?",
-            Description = "Live performance – sound excelent.",
-            MediaContent = @"<iframe width=""560"" height=""315""
-src=""https://www.youtube.com/embed/bpOSxM0rNPM""
-title=""YouTube video player"" frameborder=""0""
-allow=""accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen></iframe>",
-            IsPublic = true,
-            CreatedAt = DateTime.UtcNow.AddDays(-2),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb0" // admin@test.com
-        },
+    context.Categories.AddRange(c1, c2, c3, c4, c5);
+    context.SaveChanges(); 
+    
+    var tRock = new Tag { Name = "rock" };
+    var tIndie = new Tag { Name = "indie" };
+    var tLive = new Tag { Name = "live" };
+    var tSynth = new Tag { Name = "synthwave" };
+    var tProd = new Tag { Name = "production" };
+    var tVideo = new Tag { Name = "video" };
+    var tPhoto = new Tag { Name = "photo" };
+    
+    context.Tags.AddRange(tRock, tIndie, tLive, tSynth, tProd, tVideo, tPhoto);
+    context.SaveChanges();
+    
+    var b1 = new Bookmark {
+        Title = "Nirvana – Smells Like Teen Spirit",
+        Description = "Clip oficial – grunge classic.",
+        MediaContent = @"<iframe width=""100%"" height=""250"" src=""https://www.youtube.com/embed/hTWKbfoikeg"" frameborder=""0"" allowfullscreen></iframe>",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-8), UserId = user1.Id
+    };
+    
+    var b2 = new Bookmark {
+        Title = "Daft Punk – Random Access Memories (art)",
+        Description = "Imagine promo",
+        MediaContent = "https://weraveyou.com/wp-content/uploads/2023/03/Daft-Punk-Random-Access-Memories-scaled.jpg",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-7), UserId = user2.Id
+    };
+    
+    
+    var b3 = new Bookmark {
+        Title = "Tiny Desk Concerts",
+        Description = "sesiuni live foarte bune.",
+        MediaContent = "<iframe width=\"1062\" height=\"597\" src=\"https://www.youtube.com/embed/ferZnZ0_rSM?list=RDferZnZ0_rSM\" title=\"Anderson .Paak &amp; The Free Nationals: NPR Music Tiny Desk Concert\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-6), UserId = admin.Id
+    };
+    
+    var b4 = new Bookmark {
+        Title = "Jazz!!",
+        Description = "Pentru invatat noaptea.",
+        MediaContent = "<iframe width=\"1062\" height=\"663\" src=\"https://www.youtube.com/embed/3Q18F--zZ-I?list=RD3Q18F--zZ-I\" title=\"My Little Brown Book\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-5), UserId = user2.Id
+    };
+    
+    var b5 = new Bookmark {
+        Title = "Concert live",
+        Description = "",
+        MediaContent = "<iframe width=\"1062\" height=\"597\" src=\"https://www.youtube.com/embed/8Pa9x9fZBtY?list=RD8Pa9x9fZBtY\" title=\"Dire Straits - Sultans Of Swing (Alchemy Live)\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        IsPublic = false, CreatedAt = DateTime.Now.AddDays(-4), UserId = admin.Id
+    };
+    
+    var b6 = new Bookmark {
+        Title = "Radiohead – Weird Fishes",
+        Description = "Indie favorite.",
+        MediaContent = "<iframe width=\"1062\" height=\"597\" src=\"https://www.youtube.com/embed/pcEJyvv6_kc?list=RDpcEJyvv6_kc\" title=\"Weird Fishes/Arpeggi | Radiohead | From The Basement\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-3), UserId = user1.Id
+    };
+    
+    var b7 = new Bookmark {
+        Title = "Boiler Room sets",
+        Description = "Live DJ sets, energie maximă.",
+        MediaContent = "<iframe width=\"1062\" height=\"597\" src=\"https://www.youtube.com/embed/-5EQIiabJvk?list=RD-5EQIiabJvk\" title=\"Kaytranada | Boiler Room: Montreal\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-2), UserId = user2.Id
+    };
+    
+    var b8 = new Bookmark {
+        Title = "Album cover inspiration",
+        Description = "Colecție de cover art.",
+        MediaContent = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzyBQmXl9zYbdi-Ar-w0Wiev5WBWI5wriQ2w&s",
+        IsPublic = true, CreatedAt = DateTime.Now.AddDays(-1), UserId = admin.Id
+    };
+    
+    context.Bookmarks.AddRange(b1,b2,b3,b4,b5,b6,b7,b8);
+    context.SaveChanges();
+    
+    void LinkTag(Bookmark b, Tag t) => context.BookmarkTags.Add(new BookmarkTag { BookmarkId = b.Id, TagId = t.Id });
 
-        
-        new Bookmark
-        {
-            Title = "Nirvana – Smells Like Teen Spirit",
-            Description = "Clip oficial – grunge clasic.",
-            MediaContent = @"<iframe width=""560"" height=""315""
-src=""https://www.youtube.com/embed/hTWKbfoikeg""
-title=""YouTube video player"" frameborder=""0""
-allow=""accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen></iframe>",
-            IsPublic = true,
-            CreatedAt = DateTime.UtcNow.AddDays(-1),
-            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb1"
-        }
-    );
+    LinkTag(b1, tRock); LinkTag(b1, tVideo);
+    LinkTag(b2, tSynth); LinkTag(b2, tProd);
+    LinkTag(b3, tLive); LinkTag(b3, tVideo);
+    LinkTag(b4, tLive);
+    LinkTag(b5, tLive);
+    LinkTag(b6, tIndie); LinkTag(b6, tVideo);
+    LinkTag(b7, tLive); LinkTag(b7, tVideo);
+    LinkTag(b8, tPhoto);
+
+    
+    void LinkCat(Bookmark b, Category c) => context.BookmarkCategories.Add(new BookmarkCategory { BookmarkId = b.Id, CategoryId = c.Id });
+    
+    LinkCat(b1, c1); // Rock Classics
+    LinkCat(b6, c1);
+    LinkCat(b3, c2); // Live Sessions
+    LinkCat(b7, c2);
+    LinkCat(b2, c3);
+    LinkCat(b5, c4); 
+    LinkCat(b8, c5); // Discover Weekly
+
+
     context.SaveChanges();
         }
     }
+    
 }

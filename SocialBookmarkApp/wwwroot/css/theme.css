@@ -42,6 +42,8 @@ body {
     border: 1px solid var(--border);
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    position: relative;
+    z-index: 10;
 }
 
 .card .card-title { color: var(--text); }
@@ -121,10 +123,36 @@ footer.footer {
 
 .bookmark-card h5{
     margin-bottom: .25rem;
+    position: relative;
+    z-index: 1050;
 }
 
 .dark-theme .text-muted,
 body.dark .text-muted,
 .text-muted {
     color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.dropdown-menu {
+    z-index: 2000;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+}
+
+.media-preview {
+    width: 100%;
+    height: 220px;      
+    overflow: hidden;
+    border-radius: .75rem;
+    background: rgba(255,255,255,.05);
+}
+.media-preview > iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;  /* pt img/video */
 }

@@ -5,14 +5,15 @@
         @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
         {
             <img src="@Model.ProfileImageUrl"
-                 class="img-fluid rounded border"
-                 style="max-width: 220px;"
-                 alt="Profile picture" />
+                 class="img-fluid rounded"
+                 style="max-height:200px; object-fit:cover;" />
         }
         else
         {
-            <div class="border rounded p-4 text-center text-muted">
-                Fără poză
+            <div class="d-flex align-items-center justify-content-center"
+                 style="height:200px;">
+                <i class="bi bi-person-circle"
+                   style="font-size:5rem; color:#adb5bd;"></i>
             </div>
         }
     </div>

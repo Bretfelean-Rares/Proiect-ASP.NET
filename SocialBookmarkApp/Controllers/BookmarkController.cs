@@ -218,7 +218,7 @@ public class BookmarkController(AppDbContext context, UserManager<ApplicationUse
     
     [HttpPost]
     [Authorize(Roles="Admin, User")]
-    public IActionResult Edit(int id, Bookmark requestBookmark, string tags)
+    public IActionResult Edit(int id, Bookmark requestBookmark, string? tags)
     {
         var bookmark = db.Bookmarks
             .Include(b => b.BookmarkTags)

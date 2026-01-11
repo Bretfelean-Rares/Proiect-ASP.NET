@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SocialBookmarkApp.Data;
 using SocialBookmarkApp.Models;
-using SocialBookmarkApp.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
